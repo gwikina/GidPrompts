@@ -4,7 +4,7 @@ import {Container, Form, Button, Card} from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 const {Configuration, OpenAIApi} = require("openai");
 const configuration = new Configuration({
-    apiKey:'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',
+    apiKey: process.env.OPENAI_API_KEY,
   });
 const openai = new OpenAIApi(configuration);
 
@@ -24,7 +24,7 @@ class Prompter extends Component{
         console.log(formDataObj.prompt)
         // OPENAI 
        openai.createCompletion("text-curie-001", {
-            prompt: `Answer the question ${formDataObj.prompt}`,
+            prompt: `Give a detailed answer to the question ${formDataObj.prompt}`,
             temperature:0.8,
             max_tokens:2,
             top_p:1,
