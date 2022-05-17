@@ -3,7 +3,10 @@ import { Component } from 'react'
 import {Container, Form, Button, Card} from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 const {Configuration, OpenAIApi} = require("openai");
-
+const configuration = new Configuration({
+    apiKey:'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',
+  });
+const openai = new OpenAIApi(configuration);
 
 class Prompter extends Component{
     constructor(){
@@ -19,27 +22,21 @@ class Prompter extends Component{
         const formData = new FormData(e.target),
         formDataObj = Object.fromEntries(formData.entries())
         console.log(formDataObj.prompt)
-
         // OPENAI 
-        const configuration = new Configuration({
-            apiKey: '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',
-          });
-          const openai = new OpenAIApi(configuration);
-          
-          openai.createCompletion("text-curie-001", {
-            prompt: `Write a detailed response to the quest ${formDataObj.prompt}`,
-            temperature: 0.8,
-            max_tokens: 200,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-          })
-          .then((response) =>{
+       openai.createCompletion("text-curie-001", {
+            prompt: `Answer the question ${formDataObj.prompt}`,
+            temperature:0.8,
+            max_tokens:2,
+            top_p:1,
+            frequency_penalty:0,
+            presence_penalty:0
+           })
+          .then ((response) =>{
             this.setState({
                 heading: `Prompt: ${formDataObj.prompt}`,
                 response: `${response.data.choices[0].text}`
             })
-          });
+          })
     }
     render(){
         return(
@@ -52,7 +49,7 @@ class Prompter extends Component{
                     <h4> Enter a prompt and OpenAI will give you a response</h4>
                     <br />
                     <br />
-                    <Form  onSubmit={this.onFormSubmit}>
+                    <Form onSubmit={this.onFormSubmit}>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label> Enter your prompt </Form.Label>
                             <Form.Control
@@ -64,7 +61,7 @@ class Prompter extends Component{
                                 Enter as much information as possible for best answers
                             </Form.Text>
                         </Form.Group>
-                        <Button variant="primary" type="lg" type="submit">
+                        <Button variant="primary" size="lg" type="submit">
                                 Get AI Answers
                         </Button>
                     </Form>
