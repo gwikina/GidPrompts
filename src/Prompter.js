@@ -19,10 +19,27 @@ class Prompter extends Component{
         const formData = new FormData(e.target),
         formDataObj = Object.fromEntries(formData.entries())
         console.log(formDataObj.prompt)
-        this.setState({
-            heading: `Prompt: ${formDataObj.prompt}`,
-            response: `The response from OpenAI will be shown here`
-        })
+
+        // OPENAI 
+        const configuration = new Configuration({
+            apiKey: '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',
+          });
+          const openai = new OpenAIApi(configuration);
+          
+          openai.createCompletion("text-curie-001", {
+            prompt: `Write a detailed response to the quest ${formDataObj.prompt}`,
+            temperature: 0.8,
+            max_tokens: 200,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+          })
+          .then((response) =>{
+            this.setState({
+                heading: `Prompt: ${formDataObj.prompt}`,
+                response: `${response.data.choices[0].text}`
+            })
+          });
     }
     render(){
         return(
@@ -71,3 +88,5 @@ class Prompter extends Component{
     }
 }
 export default Prompter
+
+
